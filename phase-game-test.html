@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase Sync - Oscilloscope Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #111;
+            color: #eee;
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* CRT Screen Effect Container */
+        #crt-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, #1a1a1a 0%, #000000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* The Canvas */
+        canvas {
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            border-radius: 10px;
+            background-color: #050505;
+            cursor: crosshair;
+            z-index: 10;
+        }
+
+        /* UI Overlays */
+        .ui-layer {
+            position: absolute;
+            z-index: 20;
+            pointer-events: none;
+            text-shadow: 0 0 5px currentColor;
+        }
+
+        /* Scanlines */
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 15;
+            opacity: 0.6;
+        }
+
+        /* Screen Glow/Vignette */
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
+            z-index: 16;
+        }
+
+        /* HUD Elements */
+        #score-display {
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            color: #0ff;
+        }
+        
+        #level-display {
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: #f0f;
+        }
+
+        #message-box {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .btn {
+            pointer-events: auto;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #0ff;
+            color: #0ff;
+            padding: 10px 30px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            background: #0ff;
+            color: #000;
+            box-shadow: 0 0 20px #0ff;
+        }
+
+        /* Status Indicator */
+        #status-light {
+            bottom: 30px;
+            right: 30px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #333;
+            box-shadow: 0 0 5px #333;
+            transition: all 0.2s;
+        }
+        
+        #status-text {
+            bottom: 30px;
+            right: 60px;
+            color: #555;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+            animation-iteration-count: 1;
+        }
+
+        .crt-flicker {
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            50% { opacity: 1; }
+            100% { opacity: 0.98; }
+        }
+
+        /* Phasor Diagram */
+        #phasor-container {
+            bottom: 30px;
+            left: 30px;
+            width: 80px;
+            height: 80px;
+            border: 1px solid #333;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+        }
+        #phasor-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="crt-container">
+        <!-- Visual overlays -->
+        <div class="scanlines"></div>
+        <div class="vignette"></div>
+
+        <!-- UI Elements -->
+        <div id="score-display" class="ui-layer">SYNC: 0</div>
+        <div id="level-display" class="ui-layer">DRIFT: 1.0x</div>
+        
+        <div id="phasor-container" class="ui-layer">
+            <canvas id="phasor-canvas"></canvas>
+        </div>
+
+        <div id="status-text" class="ui-layer">STANDBY</div>
+        <div id="status-light" class="ui-layer"></div>
+
+        <div id="message-box" class="ui-layer">
+            <h1 class="text-4xl mb-2 text-cyan-400" style="text-shadow: 0 0 10px #0ff;">PHASE SYNC</h1>
+            <p class="mb-6 text-gray-300 max-w-md mx-auto">
+                Align the <span style="color:#f0f">MAGENTA</span> generator wave with the <span style="color:#0ff">CYAN</span> grid wave.
+                <br><br>
+                Click or Tap when they merge into <span style="color:#fff; text-shadow:0 0 5px #fff;">WHITE</span>.
+            </p>
+            <button id="start-btn" class="btn">INITIALIZE</button>
+        </div>
+
+        <!-- Main Game Canvas -->
+        <canvas id="game-canvas"></canvas>
+    </div>
+
+<script>
+    /**
+     * Game Configuration & State
+     */
+    const config = {
+        waveSpeed: 4,        // How fast waves scroll horizontally
+        baseAmplitude: 80,   // Height of waves
+        frequency: 0.02,     // Width of waves
+        tolerance: 0.25,     // Radians tolerance for a successful hit (approx 15 degrees)
+        baseDrift: 0.02,     // Starting drift speed
+        driftIncrement: 0.005 // How much harder it gets per level
+    };
+
+    const state = {
+        isPlaying: false,
+        score: 0,
+        level: 1,
+        time: 0,
+        driftSpeed: config.baseDrift,
+        phaseOffset: Math.PI, // Start 180 degrees out of phase
+        particles: [], // For explosion effects
+        shakeTimer: 0
+    };
+
+    // DOM Elements
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    const phasorCanvas = document.getElementById('phasor-canvas');
+    const pCtx = phasorCanvas.getContext('2d');
+    const startBtn = document.getElementById('start-btn');
+    const msgBox = document.getElementById('message-box');
+    const scoreEl = document.getElementById('score-display');
+    const levelEl = document.getElementById('level-display');
+    const statusLight = document.getElementById('status-light');
+    const statusText = document.getElementById('status-text');
+    const crtContainer = document.getElementById('crt-container');
+
+    /**
+     * Resizing Logic
+     */
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        phasorCanvas.width = 100;
+        phasorCanvas.height = 100;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    /**
+     * Particle System for Effects
+     */
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.vx = (Math.random() - 0.5) * 10;
+            this.vy = (Math.random() - 0.5) * 10;
+            this.life = 1.0;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.life -= 0.03;
+        }
+        draw(ctx) {
+            ctx.globalAlpha = this.life;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+        }
+    }
+
+    function spawnParticles(count, color) {
+        const centerY = canvas.height / 2;
+        const centerX = canvas.width / 2;
+        for(let i=0; i<count; i++) {
+            state.particles.push(new Particle(centerX, centerY, color));
+        }
+    }
+
+    /**
+     * Core Game Loop
+     */
+    function update() {
+        if (!state.isPlaying) return requestAnimationFrame(drawMenuBackground);
+
+        // Update Time
+        state.time += config.waveSpeed;
+
+        // Update Phase Drift
+        // The generator (Magenta) drifts relative to the Grid (Cyan)
+        state.phaseOffset += state.driftSpeed;
+        
+        // Normalize phase to 0-2PI for cleaner math (though Math.sin handles infinity)
+        if (state.phaseOffset > Math.PI * 2) state.phaseOffset -= Math.PI * 2;
+
+        // Screen Shake decay
+        if (state.shakeTimer > 0) {
+            state.shakeTimer--;
+            const shakeX = (Math.random() - 0.5) * 10;
+            const shakeY = (Math.random() - 0.5) * 10;
+            canvas.style.transform = `translate(${shakeX}px, ${shakeY}px)`;
+        } else {
+            canvas.style.transform = 'none';
+        }
+
+        // Update Particles
+        state.particles = state.particles.filter(p => p.life > 0);
+        state.particles.forEach(p => p.update());
+
+        draw();
+        requestAnimationFrame(update);
+    }
+
+    /**
+     * Drawing Logic
+     */
+    function draw() {
+        // Clear screen with trail effect
+        ctx.fillStyle = 'rgba(10, 10, 10, 0.3)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw Grid Lines (Retro oscilloscope grid)
+        drawGrid();
+
+        const centerY = canvas.height / 2;
+        
+        // Blend mode additive for that glowing light look
+        ctx.globalCompositeOperation = 'screen'; 
+        ctx.lineWidth = 3;
+
+        // 1. Draw Target Wave (Cyan - The Grid)
+        // Fixed phase relative to screen width, moving with time
+        ctx.strokeStyle = '#00ffff';
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00ffff';
+        ctx.beginPath();
+        for (let x = 0; x < canvas.width; x+=5) {
+            const y = centerY + Math.sin((x + state.time) * config.frequency) * config.baseAmplitude;
+            if (x===0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // 2. Draw Player Wave (Magenta - The Generator)
+        // Has the extra phaseOffset
+        ctx.strokeStyle = '#ff00ff';
+        ctx.shadowColor = '#ff00ff';
+        ctx.beginPath();
+        for (let x = 0; x < canvas.width; x+=5) {
+            // Note: We add phaseOffset here
+            const y = centerY + Math.sin((x + state.time) * config.frequency + state.phaseOffset) * config.baseAmplitude;
+            if (x===0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // 3. Draw Overlap Highlight (White)
+        // We draw a third line that is only visible when they are close, to simulate additive light mixing
+        // Calculating the difference normalized to -PI to PI
+        let diff = Math.abs(getPhaseDifference());
+        if (diff < 0.1) {
+             ctx.strokeStyle = '#ffffff';
+             ctx.lineWidth = 5;
+             ctx.shadowColor = '#ffffff';
+             ctx.shadowBlur = 20;
+             ctx.beginPath();
+             for (let x = 0; x < canvas.width; x+=10) {
+                 const y = centerY + Math.sin((x + state.time) * config.frequency + state.phaseOffset) * config.baseAmplitude;
+                 if (x===0) ctx.moveTo(x, y);
+                 else ctx.lineTo(x, y);
+             }
+             ctx.stroke();
+        }
+
+        // Draw Particles
+        ctx.globalCompositeOperation = 'source-over';
+        state.particles.forEach(p => p.draw(ctx));
+
+        // Draw Phasor
+        drawPhasor();
+    }
+
+    function drawGrid() {
+        ctx.strokeStyle = 'rgba(0, 255, 0, 0.1)';
+        ctx.lineWidth = 1;
+        ctx.shadowBlur = 0;
+        
+        // Horizontal lines
+        const centerY = canvas.height / 2;
+        ctx.beginPath();
+        ctx.moveTo(0, centerY);
+        ctx.lineTo(canvas.width, centerY);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(0, centerY - config.baseAmplitude);
+        ctx.lineTo(canvas.width, centerY - config.baseAmplitude);
+        ctx.moveTo(0, centerY + config.baseAmplitude);
+        ctx.lineTo(canvas.width, centerY + config.baseAmplitude);
+        ctx.stroke();
+
+        // Vertical lines
+        for(let x=0; x<canvas.width; x+= 100) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+        }
+    }
+
+    function drawPhasor() {
+        // Clear phasor canvas
+        pCtx.clearRect(0, 0, 100, 100);
+        const cx = 50;
+        const cy = 50;
+        const r = 35;
+
+        // Draw Circle
+        pCtx.strokeStyle = '#333';
+        pCtx.lineWidth = 2;
+        pCtx.beginPath();
+        pCtx.arc(cx, cy, r, 0, Math.PI * 2);
+        pCtx.stroke();
+
+        // Draw Reference Vector (Cyan) - Fixed at top for easy reading or rotating with time
+        // Let's make it rotate with the wave movement speed to match the scroll
+        // Actually simpler: Reference is 12 o'clock (0 rad), Player rotates relative to it.
+        
+        // Let's visualize the ACTUAL phase offset.
+        // Target Vector (Fixed at 0 degrees visually for reference, or rotating)
+        // To make it intuitive: Target is fixed UP. Player rotates.
+        
+        // Vector 1 (Target)
+        pCtx.strokeStyle = '#0ff';
+        pCtx.lineWidth = 2;
+        pCtx.beginPath();
+        pCtx.moveTo(cx, cy);
+        pCtx.lineTo(cx, cy - r); // Pointing Up
+        pCtx.stroke();
+
+        // Vector 2 (Player)
+        // phaseOffset is the difference.
+        const playerAngle = -Math.PI/2 + state.phaseOffset; // -PI/2 to start at top
+        
+        pCtx.strokeStyle = '#f0f';
+        pCtx.beginPath();
+        pCtx.moveTo(cx, cy);
+        pCtx.lineTo(cx + Math.cos(playerAngle)*r, cy + Math.sin(playerAngle)*r);
+        pCtx.stroke();
+
+        // Tolerance Zone wedge
+        pCtx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        pCtx.beginPath();
+        pCtx.moveTo(cx, cy);
+        pCtx.arc(cx, cy, r, -Math.PI/2 - config.tolerance, -Math.PI/2 + config.tolerance);
+        pCtx.lineTo(cx, cy);
+        pCtx.fill();
+    }
+
+    /**
+     * Menu Background Animation
+     */
+    function drawMenuBackground() {
+        if(state.isPlaying) return;
+        state.time += 2;
+        
+        ctx.fillStyle = '#050505';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        drawGrid();
+        
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const centerY = canvas.height / 2;
+        for (let x = 0; x < canvas.width; x+=10) {
+            const y = centerY + Math.sin((x + state.time) * 0.01) * 50;
+            if (x===0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        
+        requestAnimationFrame(drawMenuBackground);
+    }
+
+    /**
+     * Helper: Get normalized phase difference
+     * Returns value between 0 and PI
+     */
+    function getPhaseDifference() {
+        // We want the smallest distance between angles on a circle
+        // The phaseOffset is strictly 0 to 2PI or growing
+        let diff = state.phaseOffset % (Math.PI * 2);
+        
+        // If diff is > PI (e.g. 350 deg), the actual distance to 0 is small
+        if (diff > Math.PI) diff = (Math.PI * 2) - diff;
+        
+        return diff;
+    }
+
+    /**
+     * Interaction Logic
+     */
+    function handleInput() {
+        if (!state.isPlaying) return;
+
+        const diff = getPhaseDifference();
+        
+        if (diff <= config.tolerance) {
+            success();
+        } else {
+            fail();
+        }
+    }
+
+    function success() {
+        // Visuals
+        statusLight.style.backgroundColor = '#0f0';
+        statusLight.style.boxShadow = '0 0 15px #0f0';
+        statusText.innerText = "LOCKED";
+        statusText.style.color = '#0f0';
+        
+        spawnParticles(20, '#ffffff'); // White explosion
+        
+        // Logic
+        state.score++;
+        state.level++;
+        scoreEl.innerText = `SYNC: ${state.score}`;
+        
+        // Increase difficulty
+        state.driftSpeed = config.baseDrift + (state.score * config.driftIncrement);
+        
+        // Invert drift direction randomly to keep player on toes
+        if (Math.random() > 0.5) state.driftSpeed *= -1;
+        
+        levelEl.innerText = `DRIFT: ${Math.abs(state.driftSpeed / config.baseDrift).toFixed(1)}x`;
+
+        // Reset status light after delay
+        setTimeout(() => {
+            statusLight.style.backgroundColor = '#333';
+            statusLight.style.boxShadow = 'none';
+            statusText.innerText = "DRIFTING";
+            statusText.style.color = '#555';
+        }, 500);
+    }
+
+    function fail() {
+        // Visuals
+        state.shakeTimer = 20; // Trigger shake
+        spawnParticles(30, '#ff0000'); // Red explosion
+        
+        crtContainer.classList.add('crt-flicker');
+        setTimeout(() => crtContainer.classList.remove('crt-flicker'), 500);
+
+        statusLight.style.backgroundColor = '#f00';
+        statusLight.style.boxShadow = '0 0 15px #f00';
+        statusText.innerText = "MISMATCH";
+        statusText.style.color = '#f00';
+
+        endGame();
+    }
+
+    function startGame() {
+        state.isPlaying = true;
+        state.score = 0;
+        state.level = 1;
+        state.driftSpeed = config.baseDrift;
+        state.phaseOffset = Math.PI; // Reset to opposite phase
+        
+        scoreEl.innerText = "SYNC: 0";
+        levelEl.innerText = "DRIFT: 1.0x";
+        msgBox.style.opacity = 0;
+        msgBox.style.pointerEvents = 'none';
+        
+        statusText.innerText = "DRIFTING";
+        
+        update();
+    }
+
+    function endGame() {
+        state.isPlaying = false;
+        msgBox.innerHTML = `
+            <h1 class="text-4xl mb-2 text-red-500" style="text-shadow: 0 0 10px #f00;">DESYNCHRONIZED</h1>
+            <p class="mb-4 text-gray-300">SYSTEM FAILURE DETECTED</p>
+            <p class="text-2xl mb-6 text-white">SCORE: ${state.score}</p>
+            <button id="retry-btn" class="btn">REBOOT SYSTEM</button>
+        `;
+        msgBox.style.opacity = 1;
+        msgBox.style.pointerEvents = 'auto';
+
+        document.getElementById('retry-btn').addEventListener('click', startGame);
+    }
+
+    /**
+     * Event Listeners
+     */
+    startBtn.addEventListener('click', startGame);
+
+    // Click anywhere on canvas
+    document.addEventListener('mousedown', (e) => {
+        if (e.target.tagName !== 'BUTTON') handleInput();
+    });
+
+    // Touch support
+    document.addEventListener('touchstart', (e) => {
+        if (e.target.tagName !== 'BUTTON') {
+            e.preventDefault(); // Prevent zoom
+            handleInput();
+        }
+    }, { passive: false });
+
+    // Keyboard support (Spacebar)
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+            handleInput();
+        }
+    });
+
+    // Initial Menu Loop
+    requestAnimationFrame(drawMenuBackground);
+
+</script>
+</body>
+</html>
