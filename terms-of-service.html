@@ -28,19 +28,26 @@
       text-rendering: optimizeLegibility;
     }
 
-    main {
-      max-width: var(--max-width);
+    /* Robust container padding (survives site CSS overrides + var failures) */
+    body > main {
+      max-width: var(--max-width, 860px);
       margin: 0 auto;
-      padding: var(--pad-y) var(--pad-x);
+
+      padding-top: var(--pad-y, 24px) !important;
+      padding-bottom: var(--pad-y, 24px) !important;
+      padding-left: calc(var(--pad-x, 16px) + env(safe-area-inset-left)) !important;
+      padding-right: calc(var(--pad-x, 16px) + env(safe-area-inset-right)) !important;
     }
 
     /* Slightly larger padding and font on bigger screens */
     @media (min-width: 900px) {
-      :root {
-        --pad-x: 24px;
-        --pad-y: 36px;
-      }
       body { font-size: 17px; }
+      body > main {
+        padding-top: 36px !important;
+        padding-bottom: 36px !important;
+        padding-left: calc(24px + env(safe-area-inset-left)) !important;
+        padding-right: calc(24px + env(safe-area-inset-right)) !important;
+      }
     }
 
     h1, h2, h3 {
@@ -95,6 +102,7 @@
     }
   </style>
 </head>
+
 <body>
   <main>
     <h1>TERMS OF USE</h1>
