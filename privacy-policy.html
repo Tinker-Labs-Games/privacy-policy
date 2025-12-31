@@ -13,6 +13,7 @@
       --muted:#555;
       --border:#e6e6e6;
       --bg:#fff;
+      --link:#0a66c2;
     }
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
@@ -29,33 +30,46 @@
     body > main{
       max-width: var(--max);
       margin: 0 auto;
-      padding: calc(env(safe-area-inset-top) + var(--pad-y))
-               calc(env(safe-area-inset-right) + var(--pad-x))
-               calc(env(safe-area-inset-bottom) + var(--pad-y))
-               calc(env(safe-area-inset-left) + var(--pad-x)) !important;
+      padding-top: calc(env(safe-area-inset-top, 0px) + var(--pad-y)) !important;
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--pad-y)) !important;
+      padding-left: calc(env(safe-area-inset-left, 0px) + var(--pad-x)) !important;
+      padding-right: calc(env(safe-area-inset-right, 0px) + var(--pad-x)) !important;
     }
     h1,h2,h3{ line-height:1.25; }
     h1{ margin:0 0 6px 0; font-size: 28px; }
-    .meta{ color:var(--muted); margin:0 0 18px 0; }
-    .card{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:14px 16px;
-      margin: 14px 0;
+    h2{
+      font-size: 20px;
+      margin: 1.2em 0 0.5em;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
     }
-    .muted{ color:var(--muted); }
-    ul{ padding-left: 20px; }
+    h3{ font-size: 16px; margin: 1em 0 0.3em; }
+    p{ margin: 0.6em 0; }
+    ul{ padding-left: 20px; margin: 0.4em 0 0.9em; }
+    li{ margin: 0.35em 0; }
+    a{ color: var(--link); text-decoration: underline; }
+    a:hover{ text-decoration-thickness: 2px; }
     code{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 0.95em;
     }
+    .meta{ color: var(--muted); margin: 0 0 18px 0; }
+    .muted{ color: var(--muted); }
+    .card{
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin: 14px 0;
+      background: #fff;
+    }
     hr{ border:0; border-top:1px solid var(--border); margin: 18px 0; }
   </style>
 </head>
+
 <body>
 <main>
   <h1>Privacy Policy</h1>
-  <p class="meta">Tinker Labs (Dror Cohen) • Last updated: December 31, 2025</p>
+  <p class="meta"><strong>Tinker Labs (Dror Cohen)</strong> • Last updated: December 31, 2025</p>
 
   <div class="card">
     <p><strong>Who we are.</strong> This Privacy Policy explains how Dror Cohen, doing business as <strong>Tinker Labs</strong> (“we”, “us”) collects, uses, and shares information when you use our mobile games and related services (the “App” or “Services”).</p>
@@ -64,19 +78,20 @@
 
   <h2>1) Quick summary</h2>
   <ul>
-    <li>We use information to operate the game, keep it secure, measure performance, and (depending on your choices/region) show and measure ads.</li>
-    <li>You can manage optional data processing inside the app: <code>Settings → Ads & Privacy</code>.</li>
+    <li>We use information to operate the game, keep it secure, measure performance, and (depending on your choices and region) show and measure ads.</li>
+    <li>You can manage optional data processing inside the app: <code>Settings → Ads &amp; Privacy</code>.</li>
     <li>Some partners (like advertising providers) may process data under their own privacy policies.</li>
     <li>You can request access/deletion and other rights by emailing us.</li>
   </ul>
 
   <h2>2) What we collect</h2>
-  <h3>A. Information you provide</h3>
+
+  <h3>A) Information you provide</h3>
   <ul>
     <li><strong>Support and feedback.</strong> If you contact us or send in-game feedback, we receive what you submit (for example: message text, and optionally an email address if you choose to include one). Anything you type may contain personal data if you choose to include it.</li>
   </ul>
 
-  <h3>B. Information collected automatically (device/app)</h3>
+  <h3>B) Information collected automatically (device/app)</h3>
   <ul>
     <li><strong>Identifiers.</strong> Device and app identifiers (for example: IP address; app instance identifiers; device model; OS version; language; time zone; approximate region). On iOS, use of the advertising identifier (IDFA) depends on your App Tracking Transparency choice.</li>
     <li><strong>Gameplay and usage.</strong> Events about how the App is used (for example: screens viewed, actions taken, session length, and feature usage).</li>
@@ -85,15 +100,15 @@
     <li><strong>Purchases.</strong> If you buy something, we receive confirmation/receipt data from the app store platform to validate the purchase and deliver items. Payment details are handled by the app store (for example, Apple or Google).</li>
   </ul>
 
-  <h3>C. Account and login</h3>
-  <ul>
-    <li>We support sign-in via platform services (for example, Google Play Games or Game Center) and may also use an anonymous account identifier tied to your device for gameplay continuity.</li>
-  </ul>
+  <h3>C) Account and login</h3>
+  <p>We support sign-in via platform services (for example, Google Play Games or Game Center) and may also use an anonymous account identifier tied to your device for gameplay continuity.</p>
 
-  <h3>D. Session replay</h3>
-  <ul>
-    <li>We may collect interaction data to understand usability issues (for example: taps, navigation timing, and screen flow). This may include replay-style data of your session. Please avoid entering sensitive information into free-text fields. You can opt-out by shutting down Smartlook in <code>Settings → Ads & Privacy</code></li>
-  </ul>
+  <h3>D) Session replay</h3>
+  <p>
+    We may collect interaction data to understand usability issues (for example: taps, navigation timing, and screen flow).
+    This may include replay-style data of your session. Please avoid entering sensitive information into free-text fields.
+    You can opt out by shutting down Smartlook in <code>Settings → Ads &amp; Privacy</code>.
+  </p>
 
   <h2>3) How we use information</h2>
   <ul>
@@ -112,64 +127,89 @@
     <li><strong>Legal obligations</strong> (for example, compliance and recordkeeping where required).</li>
   </ul>
 
-  <h2>5) When we share information</h2>
+  <h2>5) Automated processing and profiling (where applicable)</h2>
+  <p>
+    When personalized advertising is enabled (based on your region and choices), advertising partners may use automated processing
+    (sometimes called profiling) to show ads that may be more relevant and to measure ad performance.
+    You can reduce or disable personalized advertising through <code>Settings → Ads &amp; Privacy</code> and (on iOS) via App Tracking Transparency settings.
+  </p>
+
+  <h2>6) When we share information</h2>
   <p>We share information with service providers and partners to run the App. Examples include:</p>
   <ul>
     <li><strong>Advertising:</strong> Google AdMob, Meta (Facebook) and related partners.</li>
     <li><strong>Analytics and infrastructure:</strong> Google Analytics 4 / Firebase.</li>
     <li><strong>Game backend:</strong> Microsoft PlayFab.</li>
-    <li><strong>Session replay:</strong> Smartlook</li>
+    <li><strong>Session replay:</strong> Smartlook.</li>
     <li><strong>Crash reporting:</strong> Unity crash reporting tools.</li>
-    <li><strong>Consent management UI:</strong> the in-app consent dialog shown via <code>Settings → Ads & Privacy</code>.</li>
+    <li><strong>Consent management UI:</strong> the in-app consent dialog shown via <code>Settings → Ads &amp; Privacy</code>.</li>
   </ul>
-
   <p class="muted">
-    <strong>Important:</strong> Some partners (especially advertising providers) may process certain data as independent controllers for their own purposes described in their privacy policies, such as delivering and measuring ads and preventing fraud. Your choices in <code>Settings → Ads & Privacy</code> affect what is enabled in the App.
+    <strong>Important:</strong> Some partners (especially advertising providers) may process certain data as independent controllers
+    for their own purposes described in their privacy policies, such as delivering and measuring ads, maintaining and improving their services,
+    and preventing fraud. Your choices in <code>Settings → Ads &amp; Privacy</code> affect what is enabled in the App.
   </p>
 
-  <h2>6) Your choices: Settings → Ads & Privacy</h2>
+  <h2>7) Your choices: Settings → Ads &amp; Privacy</h2>
   <ul>
-    <li>You can open <code>Settings → Ads & Privacy</code> at any time to accept or reject optional categories and adjust your choices.</li>
+    <li>You can open <code>Settings → Ads &amp; Privacy</code> at any time to accept or reject optional categories and adjust your choices.</li>
     <li>On iOS, you can also control tracking permission via the system prompt and device settings (App Tracking Transparency).</li>
     <li>You can reset or limit the advertising identifier in your device settings (availability depends on OS).</li>
   </ul>
 
-  <h2>7) California notice (CCPA/CPRA)</h2>
+  <h2>8) California notice (CCPA/CPRA)</h2>
   <p>If you are a California resident, you may have rights to know/access, delete, correct, and opt out of certain disclosures of personal information.</p>
   <ul>
-    <li><strong>Do Not Sell or Share:</strong> if we “share” personal information for cross-context behavioral advertising, you can opt out by using <code>Settings → Ads & Privacy</code> (rejecting personalized advertising/marketing-related categories where available).</li>
+    <li><strong>Do Not Sell or Share:</strong> if we “share” personal information for cross-context behavioral advertising, you can opt out by using <code>Settings → Ads &amp; Privacy</code> (rejecting personalized advertising and marketing-related categories where available).</li>
+    <li><strong>Website link:</strong> if we are required to provide a “Do Not Sell or Share My Personal Information” link for our website experience, we will make it available on our website (for example in the footer or privacy area).</li>
+    <li><strong>Opt-out preference signals (GPC):</strong> if you access our website and your browser sends an opt-out preference signal such as the Global Privacy Control (GPC), we will process it as required by applicable law for that website context.</li>
     <li><strong>How to submit requests:</strong> email <a href="mailto:privacy@tinker-labs.com">privacy@tinker-labs.com</a>. We operate exclusively online, so we provide email as a request method.</li>
+    <li><strong>Response timing (California):</strong> we typically confirm receipt of a request within 10 business days and aim to respond substantively within 45 days, subject to verification and legal exceptions. If we need more time, we may extend the response period as allowed by law.</li>
   </ul>
 
-  <h2>8) Retention</h2>
+  <h2>9) Retention</h2>
   <ul>
     <li><strong>Account and gameplay data:</strong> kept while you use the App, plus a reasonable period for backup, fraud prevention, and support.</li>
     <li><strong>Crash/diagnostics and analytics:</strong> typically retained up to 24 months (or less if configured), then deleted or aggregated/anonymized where possible.</li>
     <li><strong>Support/feedback:</strong> typically retained up to 24 months after last contact, unless we need longer to resolve a dispute or comply with law.</li>
   </ul>
 
-  <h2>9) International transfers</h2>
-  <p>We are based in Israel and may use service providers that process data in other countries (including the United States and EU). Where required, we rely on appropriate safeguards for international transfers (for example, standard contractual clauses used by providers).</p>
+  <h2>10) International transfers</h2>
+  <p>
+    We are based in Israel and may use service providers that process data in other countries (including the United States and EU).
+    Where required, we rely on appropriate safeguards for international transfers (for example, standard contractual clauses used by providers).
+  </p>
+  <p><strong>How to get details:</strong> you can request additional information about applicable safeguards by emailing <a href="mailto:privacy@tinker-labs.com">privacy@tinker-labs.com</a>.</p>
 
-  <h2>10) Security</h2>
+  <h2>11) Is providing data required?</h2>
+  <p>
+    Some information is necessary to provide the Services (for example, network information like IP address and certain identifiers needed for app
+    functionality, security, and saving progress). If you restrict required data (for example by disabling network access or deleting required identifiers),
+    parts of the App may not function properly. For optional processing (like certain analytics, session replay, and personalized ads), you can control this
+    via <code>Settings → Ads &amp; Privacy</code>.
+  </p>
+
+  <h2>12) Security</h2>
   <p>We use reasonable administrative, technical, and organizational measures designed to protect information. No method of transmission or storage is fully secure.</p>
 
-  <h2>11) Your rights</h2>
+  <h2>13) Your rights</h2>
   <ul>
     <li>You may have rights to access, delete, correct, object, restrict processing, and data portability, depending on where you live.</li>
-    <li>If processing is based on consent, you can withdraw consent at any time via <code>Settings → Ads & Privacy</code>.</li>
+    <li>If processing is based on consent, you can withdraw consent at any time via <code>Settings → Ads &amp; Privacy</code>.</li>
     <li>To exercise rights, contact <a href="mailto:privacy@tinker-labs.com">privacy@tinker-labs.com</a>.</li>
+    <li><strong>EEA/UK complaint right:</strong> if you are in the EEA/UK, you also have the right to lodge a complaint with your local data protection supervisory authority.</li>
   </ul>
 
-  <h2>12) Children</h2>
+  <h2>14) Children</h2>
   <p>Our Services are not directed to children under 13. If you believe a child provided personal information to us, contact us and we will take appropriate steps.</p>
 
-  <h2>13) Changes to this policy</h2>
+  <h2>15) Changes to this policy</h2>
   <p>We may update this policy from time to time. We will update the “Last updated” date above and, if changes are material, we may provide additional notice in the App or on our website.</p>
 
   <hr />
+
   <p class="muted">
-    Tinker Labs (Dror Cohen) • Based in Israel •
+    <strong>Tinker Labs (Dror Cohen)</strong> • Based in Israel •
     <a href="mailto:privacy@tinker-labs.com">privacy@tinker-labs.com</a>
   </p>
 </main>
