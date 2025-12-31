@@ -4,6 +4,96 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Power Inc - Terms of Use</title>
+
+  <style>
+    :root {
+      --max-width: 860px;
+      --pad-x: 16px;
+      --pad-y: 24px;
+      --text: #111;
+      --muted: #555;
+      --border: #e6e6e6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: #fff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+      text-rendering: optimizeLegibility;
+    }
+
+    main {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: var(--pad-y) var(--pad-x);
+    }
+
+    /* Slightly larger padding and font on bigger screens */
+    @media (min-width: 900px) {
+      :root {
+        --pad-x: 24px;
+        --pad-y: 36px;
+      }
+      body { font-size: 17px; }
+    }
+
+    h1, h2, h3 {
+      line-height: 1.25;
+      margin: 1.2em 0 0.5em;
+    }
+
+    h1 { font-size: 1.9rem; margin-top: 0; }
+    h2 { font-size: 1.35rem; padding-top: 0.25rem; }
+    h3 { font-size: 1.1rem; color: var(--text); }
+
+    p { margin: 0.65em 0; }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-thickness: 1px;
+    }
+
+    a:hover { opacity: 0.85; }
+
+    hr {
+      border: 0;
+      border-top: 1px solid var(--border);
+      margin: 1.5em 0;
+    }
+
+    ol, ul {
+      padding-left: 1.25em;
+      margin: 0.6em 0 1em;
+    }
+
+    li { margin: 0.35em 0; }
+
+    /* Make the Table of Contents easier to scan */
+    .toc {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fafafa;
+      margin: 1em 0 1.5em;
+    }
+
+    .toc ol { margin: 0; }
+    .muted { color: var(--muted); }
+
+    /* Keep long emails/URLs from blowing up the layout */
+    p, li {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+  </style>
 </head>
 <body>
   <main>
@@ -16,30 +106,32 @@
     <p>You can contact us at: <strong>hello@tinker-labs.com</strong></p>
     <p>These Legal Terms constitute a legally binding agreement between you ("you") and Tinker Labs concerning your access to and use of the Services. By accessing or using the Services, you acknowledge that you have read, understood, and agree to be bound by these Legal Terms. <strong>IF YOU DO NOT AGREE, YOU MUST NOT USE THE SERVICES.</strong></p>
     <p>We may update these Legal Terms from time to time by posting an updated version and changing the “Last updated” date. You are responsible for reviewing them periodically. Your continued use of the Services after changes are posted means you accept the updated Legal Terms.</p>
-    <p>We recommend that you print or save a copy of these Legal Terms for your records.</p>
+    <p class="muted">We recommend that you print or save a copy of these Legal Terms for your records.</p>
 
     <h2>TABLE OF CONTENTS</h2>
-    <ol>
-      <li><a href="#services">OUR SERVICES</a></li>
-      <li><a href="#ip">INTELLECTUAL PROPERTY RIGHTS</a></li>
-      <li><a href="#userreps">USER REPRESENTATIONS</a></li>
-      <li><a href="#prohibited">PROHIBITED ACTIVITIES</a></li>
-      <li><a href="#feedback">FEEDBACK</a></li>
-      <li><a href="#virtual-items">VIRTUAL ITEMS, PURCHASES, AND REFUNDS</a></li>
-      <li><a href="#management">SERVICES MANAGEMENT</a></li>
-      <li><a href="#termination">TERM AND TERMINATION</a></li>
-      <li><a href="#modifications">MODIFICATIONS AND INTERRUPTIONS</a></li>
-      <li><a href="#law">GOVERNING LAW</a></li>
-      <li><a href="#disputes">DISPUTE RESOLUTION</a></li>
-      <li><a href="#corrections">CORRECTIONS</a></li>
-      <li><a href="#disclaimer">DISCLAIMER</a></li>
-      <li><a href="#liability">LIMITATIONS OF LIABILITY</a></li>
-      <li><a href="#indemnification">INDEMNIFICATION</a></li>
-      <li><a href="#userdata">USER DATA</a></li>
-      <li><a href="#electronic">ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES</a></li>
-      <li><a href="#misc">MISCELLANEOUS</a></li>
-      <li><a href="#contact">CONTACT US</a></li>
-    </ol>
+    <div class="toc">
+      <ol>
+        <li><a href="#services">OUR SERVICES</a></li>
+        <li><a href="#ip">INTELLECTUAL PROPERTY RIGHTS</a></li>
+        <li><a href="#userreps">USER REPRESENTATIONS</a></li>
+        <li><a href="#prohibited">PROHIBITED ACTIVITIES</a></li>
+        <li><a href="#feedback">FEEDBACK</a></li>
+        <li><a href="#virtual-items">VIRTUAL ITEMS, PURCHASES, AND REFUNDS</a></li>
+        <li><a href="#management">SERVICES MANAGEMENT</a></li>
+        <li><a href="#termination">TERM AND TERMINATION</a></li>
+        <li><a href="#modifications">MODIFICATIONS AND INTERRUPTIONS</a></li>
+        <li><a href="#law">GOVERNING LAW</a></li>
+        <li><a href="#disputes">DISPUTE RESOLUTION</a></li>
+        <li><a href="#corrections">CORRECTIONS</a></li>
+        <li><a href="#disclaimer">DISCLAIMER</a></li>
+        <li><a href="#liability">LIMITATIONS OF LIABILITY</a></li>
+        <li><a href="#indemnification">INDEMNIFICATION</a></li>
+        <li><a href="#userdata">USER DATA</a></li>
+        <li><a href="#electronic">ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES</a></li>
+        <li><a href="#misc">MISCELLANEOUS</a></li>
+        <li><a href="#contact">CONTACT US</a></li>
+      </ol>
+    </div>
 
     <hr />
 
