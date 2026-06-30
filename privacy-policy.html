@@ -55,8 +55,17 @@
     p{ margin: 0.6em 0; }
     ul{ padding-left: 20px; margin: 0.4em 0 0.9em; }
     li{ margin: 0.35em 0; }
-    a{ color: var(--link); text-decoration: underline; }
-    a:hover{ text-decoration-thickness: 2px; }
+    /* Force anchors inline. The live site embeds this file inside Webflow,
+       whose global stylesheet sets a{ display:block }, which would otherwise
+       push every link onto its own line and orphan trailing punctuation. */
+    main a{
+      display: inline !important;
+      float: none !important;
+      color: var(--link);
+      text-decoration: underline;
+      overflow-wrap: break-word;
+    }
+    main a:hover{ text-decoration-thickness: 2px; }
     code{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 0.95em;
@@ -82,7 +91,7 @@
   <div class="card">
     <p><strong>Who we are.</strong> This Privacy Policy explains how Dror Cohen, doing business as <strong>Tinker Labs</strong> (“we”, “us”) collects, uses, and shares information when you use our mobile games and related services (the “App” or “Services”).</p>
     <p><strong>Contact.</strong> Email: <a href="mailto:privacy@tinker-labs.com">privacy@tinker-labs.com</a></p>
-    <p><strong>EU/UK representative (GDPR Article 27).</strong> If you are located in the EU/UK, you may also contact our appointed representative. <span style="white-space:nowrap">See <a href="#representatives">Section 16</a>.</span></p>
+    <p><strong>EU/UK representative (GDPR Article 27).</strong> If you are located in the EU/UK, you may also contact our appointed representative. See <a href="#representatives">Section 16</a>.</p>
   </div>
 
   <h2>1) Quick summary</h2>
@@ -216,7 +225,7 @@
     <li>If processing is based on consent, you can withdraw consent at any time via <code>Settings → Ads &amp; Privacy</code>.</li>
     <li>To exercise rights, contact <a href="mailto:privacy@tinker-labs.com">privacy@tinker-labs.com</a>.</li>
     <li><strong>EEA/UK complaint right:</strong> if you are in the EEA/UK, you also have the right to lodge a complaint with your local data protection supervisory authority.</li>
-    <li><strong>EU/UK representative:</strong> see <span style="white-space:nowrap"><a href="#representatives">Section 16</a>.</span></li>
+    <li><strong>EU/UK representative:</strong> see <a href="#representatives">Section 16</a>.</li>
   </ul>
 
   <h3>How to make a data protection complaint</h3>
