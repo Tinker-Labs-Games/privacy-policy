@@ -16,7 +16,7 @@
       --link:#0a66c2;
     }
     *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    html,body{ height:100%; max-width:100%; overflow-x:hidden; }
     body{
       margin:0;
       background:var(--bg);
@@ -26,6 +26,7 @@
       font-size:16px;
       -webkit-text-size-adjust:100%;
       text-rendering:optimizeLegibility;
+      overflow-wrap:break-word;
     }
     body > main{
       max-width: var(--max);
@@ -47,7 +48,7 @@
     p{ margin: 0.6em 0; }
     ul{ padding-left: 20px; margin: 0.4em 0 0.9em; }
     li{ margin: 0.35em 0; }
-    a{ color: var(--link); text-decoration: underline; }
+    a{ color: var(--link); text-decoration: underline; overflow-wrap:anywhere; }
     a:hover{ text-decoration-thickness: 2px; }
     code{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -208,7 +209,7 @@
     <li>If processing is based on consent, you can withdraw consent at any time via <code>Settings → Ads &amp; Privacy</code>.</li>
     <li>To exercise rights, contact <a href="mailto:privacy@tinker-labs.com">privacy@tinker-labs.com</a>.</li>
     <li><strong>EEA/UK complaint right:</strong> if you are in the EEA/UK, you also have the right to lodge a complaint with your local data protection supervisory authority.</li>
-    <li><strong>EU/UK representative:</strong> see <a href="#representatives">Section 16</a>.</li>
+    <li><strong>EU/UK representative:</strong> see <span style="white-space:nowrap"><a href="#representatives">Section 16</a>.</span></li>
   </ul>
 
   <h3>How to make a data protection complaint</h3>
