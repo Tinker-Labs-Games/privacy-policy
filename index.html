@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tinker Labs</title>
+  <meta name="description" content="Tinker Labs makes mobile games." />
+  <style>
+    :root{
+      --max: 820px;
+      --pad-x: 26px;
+      --pad-y: 34px;
+      --text:#111;
+      --muted:#555;
+      --border:#e6e6e6;
+      --page:#f3f4f6;
+      --bg:#fff;
+      --link:#0a66c2;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ min-height:100%; max-width:100%; overflow-x:hidden; }
+    body{
+      margin:0;
+      color:var(--text);
+      background:var(--page);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      line-height:1.6;
+      font-size:16px;
+      -webkit-text-size-adjust:100%;
+      display:flex;
+      min-height:100vh;
+      align-items:center;
+      justify-content:center;
+      padding:
+        calc(env(safe-area-inset-top, 0px) + 24px)
+        calc(env(safe-area-inset-right, 0px) + 16px)
+        calc(env(safe-area-inset-bottom, 0px) + 24px)
+        calc(env(safe-area-inset-left, 0px) + 16px);
+    }
+    main{
+      width:100%;
+      max-width:var(--max);
+      background:var(--bg);
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow:0 1px 2px rgba(0,0,0,.05), 0 10px 30px rgba(0,0,0,.05);
+      padding: var(--pad-y) var(--pad-x);
+    }
+    h1{ margin:0 0 6px; font-size:30px; line-height:1.2; }
+    p{ margin:.6em 0; color:var(--muted); }
+    ul{ list-style:none; padding:0; margin:1.3em 0 0; }
+    li{ margin:.55em 0; font-size:18px; }
+    a{ color:var(--link); text-decoration:underline; }
+    a:hover{ text-decoration-thickness:2px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Tinker Labs</h1>
+    <p>We make mobile games.</p>
+    <p>Contact: <a href="mailto:hello@tinker-labs.com">hello@tinker-labs.com</a></p>
+    <ul>
+      <li><a href="/privacy">Privacy Policy</a></li>
+      <li><a href="/terms-of-service">Terms of Service</a></li>
+    </ul>
+  </main>
+</body>
+</html>
