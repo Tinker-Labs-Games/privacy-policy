@@ -61,14 +61,20 @@
 
     p { margin: 0.65em 0; }
 
-    a {
+    /* Force anchors inline. The live site embeds this file inside Webflow,
+       whose global stylesheet sets a{ display:block }, which would otherwise
+       push every link onto its own line and orphan trailing punctuation. */
+    main a {
+      display: inline !important;
+      float: none !important;
+      overflow-wrap: break-word;
       color: inherit;
       text-decoration: underline;
       text-underline-offset: 2px;
       text-decoration-thickness: 1px;
     }
 
-    a:hover { opacity: 0.85; }
+    main a:hover { opacity: 0.85; }
 
     hr {
       border: 0;
